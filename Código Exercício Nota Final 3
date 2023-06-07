@@ -1,0 +1,131 @@
+#1)
+import pandas as pd
+
+df = pd.read_csv('world_alcohol.csv')
+
+print(df.head(),'\n\n------------------------------------------------------------------------------\n\n')
+
+#A)
+grupo_tipos = df.groupby('Beverage Types')
+
+#B)
+grupo_regiao = df.groupby('WHO region')
+grupo_ano = df.groupby('Year')
+
+#C)
+contagem_regiao = grupo_regiao.size()
+print(contagem_regiao,'\n')
+
+grupo_país = df.groupby('Country')
+contagem_país = grupo_país.size()
+print(contagem_país,'\n')
+
+soma_valores = df.groupby('Beverage Types')['Display Value'].sum()
+print(soma_valores,'\n\n------------------------------------------------------------------------------\n\n')
+
+#D)
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+media = df['Display Value'].mean()
+moda = df['Display Value'].mode().values[0]
+mediana = df['Display Value'].median()
+estat_desc = df['Display Value'].describe()
+
+print("Média:", media,'\n')
+print("Moda:", moda,'\n')
+print("Mediana:", mediana,'\n')
+print("Estatísticas Descritivas:")
+print(estat_desc,'\n\n------------------------------------------------------------------------------\n\n')
+
+#E)
+bebidas_1985 = df[df['Year'] == 1985]['Beverage Types']
+print("Bebidas do ano de 1985:")
+print(bebidas_1985,'\n')
+
+df['WHO region'] = df['WHO region'].astype('category')
+regiao_acima_de_4 = df[df['WHO region'].cat.codes > 4]['WHO region']
+print("Região com valores acima de 4:")
+print(regiao_acima_de_4,'\n\n------------------------------------------------------------------------------\n\n')
+
+#2)
+import pandas as pd
+
+url = 'https://raw.githubusercontent.com/emacholi/NF3-BIG-DATA-Emmanuel/main/cursos-prouni.csv'
+dataframe = pd.read_csv(url)
+
+print(dataframe.head(),'\n\n------------------------------------------------------------------------------\n\n')
+
+#A)
+dataframe['nota_integral_ampla'] = dataframe['nota_integral_ampla'].fillna(0.0)
+dataframe['nota_integral_cotas'] = dataframe['nota_integral_cotas'].fillna(0.0)
+dataframe['nota_parcial_ampla'] = dataframe['nota_parcial_ampla'].fillna(0.0)
+dataframe['nota_parcial_cotas'] = dataframe['nota_parcial_cotas'].fillna(0.0)
+
+print(dataframe,'\n\n------------------------------------------------------------------------------\n\n')
+
+#B)
+grupo_grau = dataframe.groupby('grau')
+
+#C)
+cursos_desejados = ['Matemática', 'Medicina', 'Pedagogia']
+dataframe_filtrado = dataframe[dataframe['curso_busca'].isin(cursos_desejados)]
+
+grupo_cursos = dataframe_filtrado.groupby('curso_busca')
+
+#D)
+notas_filtradas = dataframe[['nota_integral_ampla', 'nota_integral_cotas', 'nota_parcial_ampla', 'nota_parcial_cotas']].replace(0, float('inf'))
+
+media_cortes_estado = notas_filtradas.groupby(dataframe['uf_busca']).min().mean(axis=1)
+print(media_cortes_estado,'\n\n------------------------------------------------------------------------------\n\n')
+
+#E)
+cursos_tecnologicos = ['TecnolÃ³gico']
+dataframe_tecnologicos = dataframe[dataframe['grau'].isin(cursos_tecnologicos)]
+
+grupos_tecnologicos = dataframe_tecnologicos.groupby('nome')
+
+#F)
+dataframe = dataframe.drop("cidade_filtro", axis=1)
+
+print(dataframe,'\n\n------------------------------------------------------------------------------\n\n')
+
+#G)
+cursos_medicina = dataframe[dataframe['nome'] == 'Medicina']
+media_mensalidades = cursos_medicina['mensalidade'].mean()
+
+print(f"Média das mensalidades dos cursos de Medicina: {media_mensalidades}",'\n\n------------------------------------------------------------------------------\n\n')
+
+#H)
+cursos_tempo_integral = dataframe[dataframe['turno'] == 'Integral']
+
+colunas_notas_corte = ['nota_integral_ampla', 'nota_integral_cotas']
+
+cursos_tempo_integral_filtrado = cursos_tempo_integral[
+    (cursos_tempo_integral['nota_integral_ampla'] != 0) &
+    (cursos_tempo_integral['nota_integral_cotas'] != 0)
+]
+
+media_notas_corte = cursos_tempo_integral_filtrado[colunas_notas_corte].mean().mean()
+
+print(f"Média das notas de corte dos cursos em tempo integral: {media_notas_corte}",'\n\n------------------------------------------------------------------------------\n\n')
+
+#I)
+cursos_bacharelado = dataframe[dataframe['grau'] == 'Bacharelado']
+notas_integral_ampla = cursos_bacharelado['nota_integral_ampla']
+
+estatisticas_descritivas = notas_integral_ampla.describe()
+
+print(estatisticas_descritivas,'\n\n------------------------------------------------------------------------------\n\n')
+
+#J)
+import matplotlib.pyplot as plt
+
+grupo_grau = dataframe.groupby('grau')['nota_integral_cotas'].mean()
+
+plt.bar(grupo_grau.index, grupo_grau.values)
+plt.xlabel('Grau dos Cursos')
+plt.ylabel('Notas Integrais de Cotas')
+plt.title('Gráfico comparativo entre o grau dos cursos e as notas integrais de cotas')
+plt.xticks(rotation=45)
+plt.show()
