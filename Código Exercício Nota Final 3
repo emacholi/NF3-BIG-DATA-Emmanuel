@@ -80,7 +80,7 @@ media_cortes_estado = notas_filtradas.groupby(dataframe['uf_busca']).min().mean(
 print(media_cortes_estado,'\n\n------------------------------------------------------------------------------\n\n')
 
 #E)
-cursos_tecnologicos = ['TecnolÃ³gico']
+cursos_tecnologicos = ['Tecnológico']
 dataframe_tecnologicos = dataframe[dataframe['grau'].isin(cursos_tecnologicos)]
 
 grupos_tecnologicos = dataframe_tecnologicos.groupby('nome')
